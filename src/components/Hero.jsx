@@ -17,7 +17,6 @@ export default function Hero() {
       gsap.from('.hero-cta', { opacity: 0, y: 20, duration: 0.7, delay: 0.95, ease: 'power2.out' })
       gsap.from('.hero-stats', { opacity: 0, y: 16, duration: 0.7, delay: 1.1, ease: 'power2.out' })
       gsap.from('.hero-img', { opacity: 0, x: 40, duration: 1.0, delay: 0.6, ease: 'power3.out' })
-      gsap.from('.hero-floatcard', { opacity: 0, scale: 0.9, duration: 0.6, delay: 1.2, ease: 'back.out(1.7)' })
     }, sectionRef)
     return () => ctx.revert()
   }, [])
@@ -39,9 +38,9 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-16 md:py-28 w-full grid md:grid-cols-[1fr_auto] gap-8 md:gap-4 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-6 md:py-8 w-full grid md:grid-cols-[1fr_auto] gap-6 md:gap-0 items-end">
         {/* Left — text */}
-        <div className="flex flex-col gap-7 max-w-xl">
+        <div className="flex flex-col gap-4 max-w-xl pt-2 md:pt-4 pb-8 md:pb-12">
           {/* Badge */}
           <div
             className="hero-badge inline-flex items-center gap-2 self-start px-4 py-2 rounded-full text-xs font-semibold tracking-widest uppercase"
@@ -58,11 +57,11 @@ export default function Hero() {
 
           {/* Headline — bold & large */}
           <h1
-            className="hero-h1 leading-[1.0] text-[#2D282A]"
+            className="hero-h1 leading-[1.0] text-[#2D282A] -mt-1"
             style={{
               fontFamily: 'var(--font-display)',
               fontWeight: 700,
-              fontSize: 'clamp(3rem, 7vw, 5.5rem)',
+              fontSize: 'clamp(2.5rem, 6.5vw, 4.8rem)',
               letterSpacing: '-0.01em',
             }}
           >
@@ -81,14 +80,14 @@ export default function Hero() {
           </h1>
 
           {/* Sub */}
-          <p className="hero-sub text-base leading-relaxed max-w-md" style={{ color: '#5a4a50' }}>
+          <p className="hero-sub text-base leading-relaxed max-w-md -mt-1" style={{ color: '#5a4a50' }}>
             Atendimento exclusivo e personalizado. Técnicas avançadas para
             valorizar os traços únicos de cada cliente — com elegância,
             cuidado e sofisticação.
           </p>
 
           {/* CTAs */}
-          <div className="hero-cta flex flex-wrap gap-3 pt-1">
+          <div className="hero-cta flex flex-wrap gap-3 pt-0">
             <a
               href={waLink('Olá Fernanda! Gostaria de agendar um atendimento.')}
               target="_blank"
@@ -139,12 +138,12 @@ export default function Hero() {
                 {i > 0 && <div className="w-px h-8" style={{ background: 'rgba(216,138,154,0.3)' }} />}
                 <div className="flex flex-col">
                   <span
-                    className="text-xl font-bold leading-tight"
+                    className="text-lg sm:text-xl font-bold leading-tight"
                     style={{ fontFamily: 'var(--font-display)', color: '#2D282A' }}
                   >
                     {s.n}
                   </span>
-                  <span className="text-[11px] tracking-wide" style={{ color: '#7A7375' }}>{s.label}</span>
+                  <span className="text-[10px] sm:text-[11px] tracking-wide" style={{ color: '#7A7375' }}>{s.label}</span>
                 </div>
               </div>
             ))}
@@ -152,7 +151,7 @@ export default function Hero() {
         </div>
 
         {/* Right — Fernanda cutout */}
-        <div className="hero-img relative flex items-end justify-center self-end">
+        <div className="hero-img relative flex items-end justify-center md:justify-end self-start md:self-end md:-mr-6">
           {/* Glow behind the figure */}
           <div
             className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[110%] h-[80%] rounded-full pointer-events-none"
@@ -165,32 +164,16 @@ export default function Hero() {
           <img
             src={fernandaHero}
             alt="Fernanda Mioni — Especialista em Lash & Brow"
-            className="relative z-10 w-[340px] md:w-[420px] lg:w-[500px] object-contain drop-shadow-2xl"
-            style={{ maxHeight: '80vh' }}
+            className="relative z-10 w-[400px] md:w-[520px] lg:w-[600px] object-contain drop-shadow-2xl"
+            style={{ maxHeight: '88vh' }}
           />
-
-          {/* Floating card */}
-          <div
-            className="hero-floatcard absolute top-[12%] -left-6 md:-left-12 rounded-2xl px-4 py-3.5 z-20"
-            style={{
-              background: 'rgba(255,255,255,0.85)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(226,207,180,0.5)',
-              boxShadow: '0 8px 32px rgba(45,40,42,0.10)',
-            }}
-          >
-            <p className="text-[10px] tracking-[0.15em] uppercase font-semibold mb-0.5" style={{ color: '#D88A9A' }}>
-              Próxima disponibilidade
-            </p>
-            <p className="text-sm font-bold" style={{ color: '#2D282A' }}>Agende pelo WhatsApp</p>
-          </div>
         </div>
       </div>
 
       {/* Scroll cue */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2" style={{ color: '#b06070' }}>
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5" style={{ color: '#b06070' }}>
         <span className="text-[9px] tracking-[0.25em] uppercase font-medium">Explore</span>
-        <div className="w-px h-8 animate-pulse" style={{ background: 'linear-gradient(to bottom, #D88A9A, transparent)' }} />
+        <div className="w-px h-5 animate-pulse" style={{ background: 'linear-gradient(to bottom, #D88A9A, transparent)' }} />
       </div>
     </section>
   )
