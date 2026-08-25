@@ -7,10 +7,15 @@ import BeforeAfter from '@/components/BeforeAfter'
 import Testimonials from '@/components/Testimonials'
 import LocationFaq from '@/components/LocationFaq'
 import Footer from '@/components/Footer'
+import BackToTop from '@/components/BackToTop'
+import { useSmoothScroll } from '@/hooks/useSmoothScroll'
 
 export default function App() {
+  // Inicializar smooth scroll
+  useSmoothScroll()
+
   return (
-    <div style={{ fontFamily: 'var(--font-body)' }}>
+    <div id="top" style={{ fontFamily: 'var(--font-body)' }}>
       <Header />
       <main>
         <Hero />
@@ -22,6 +27,7 @@ export default function App() {
         <LocationFaq />
       </main>
       <Footer />
+      <BackToTop />
     </div>
   )
 }

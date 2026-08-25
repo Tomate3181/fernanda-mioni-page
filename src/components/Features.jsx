@@ -18,7 +18,7 @@ export default function Features() {
   ]
 
   return (
-    <section className="bg-[#FDFBF9] py-20 md:py-28">
+    <section id="diferenciais" className="bg-[#FDFBF9] py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid md:grid-cols-3 gap-6">
           {cards.map((c) => (

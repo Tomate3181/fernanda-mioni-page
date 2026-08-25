@@ -10,7 +10,7 @@ export default function Testimonials() {
   const next = () => setActive((a) => (a === TESTIMONIALS.length - 1 ? 0 : a + 1))
 
   return (
-    <section className="bg-[#FDFBF9] py-20 md:py-32">
+    <section id="depoimentos" className="bg-[#FDFBF9] py-20 md:py-32">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-start">
           {/* Left — testimonial carousel */}

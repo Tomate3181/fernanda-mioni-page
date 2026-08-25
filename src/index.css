@@ -19,7 +19,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Desabilitar scroll-behavior nativo para que o Lenis funcione */
+  scroll-behavior: auto;
 }
 
 body {
@@ -27,6 +28,22 @@ body {
   color: #2D282A;
   background: #FFFFFF;
   -webkit-font-smoothing: antialiased;
+  /* Otimizações para Lenis */
+  overflow-x: hidden;
+}
+
+/* Lenis classes para melhor compatibilidade */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
 }
 
 ::-webkit-scrollbar {
