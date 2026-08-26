@@ -9,6 +9,17 @@ export default function FluidCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
+
+    // Detectar dispositivo móvel - se for mobile, usar background estático
+    const isMobile = 'ontouchstart' in window || window.innerWidth <= 768
+
+    if (isMobile) {
+      // MOBILE: Background estático CSS apenas
+      canvas.style.display = 'none'
+      return
+    }
+
+    // DESKTOP APENAS: Canvas animado
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
@@ -18,54 +29,37 @@ export default function FluidCanvas() {
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
     }
     resize()
-    window.addEventListener('resize', resize)
+    window.addEventListener('resize', resize, { passive: true })
 
-    // Enhanced blob system with more organic movement
+    // Blobs reduzidos para desktop apenas
     const blobs = [
-      { x: 0.15, y: 0.25, r: 0.45, vx: 0, vy: 0, color: 'rgba(216,138,154,0.12)', targetX: 0.15, targetY: 0.25 },
-      { x: 0.75, y: 0.18, r: 0.38, vx: 0, vy: 0, color: 'rgba(237,181,192,0.10)', targetX: 0.75, targetY: 0.18 },
-      { x: 0.45, y: 0.65, r: 0.50, vx: 0, vy: 0, color: 'rgba(226,207,180,0.08)', targetX: 0.45, targetY: 0.65 },
-      { x: 0.88, y: 0.70, r: 0.32, vx: 0, vy: 0, color: 'rgba(240,232,216,0.11)', targetX: 0.88, targetY: 0.70 },
-      { x: 0.08, y: 0.78, r: 0.28, vx: 0, vy: 0, color: 'rgba(210,150,165,0.09)', targetX: 0.08, targetY: 0.78 },
-      { x: 0.60, y: 0.35, r: 0.35, vx: 0, vy: 0, color: 'rgba(232,198,210,0.13)', targetX: 0.60, targetY: 0.35 },
-      { x: 0.30, y: 0.85, r: 0.22, vx: 0, vy: 0, color: 'rgba(248,227,235,0.08)', targetX: 0.30, targetY: 0.85 },
-      // Novos blobs para região central/direita
-      { x: 0.70, y: 0.45, r: 0.28, vx: 0, vy: 0, color: 'rgba(216,138,154,0.14)', targetX: 0.70, targetY: 0.45 },
-      { x: 0.85, y: 0.35, r: 0.25, vx: 0, vy: 0, color: 'rgba(237,181,192,0.12)', targetX: 0.85, targetY: 0.35 },
-      { x: 0.55, y: 0.20, r: 0.30, vx: 0, vy: 0, color: 'rgba(226,207,180,0.10)', targetX: 0.55, targetY: 0.20 },
-      { x: 0.92, y: 0.55, r: 0.22, vx: 0, vy: 0, color: 'rgba(210,150,165,0.11)', targetX: 0.92, targetY: 0.55 },
+      { x: 0.15, y: 0.25, r: 0.45, color: 'rgba(216,138,154,0.12)', targetX: 0.15, targetY: 0.25 },
+      { x: 0.75, y: 0.18, r: 0.38, color: 'rgba(237,181,192,0.10)', targetX: 0.75, targetY: 0.18 },
+      { x: 0.45, y: 0.65, r: 0.50, color: 'rgba(226,207,180,0.08)', targetX: 0.45, targetY: 0.65 },
+      { x: 0.60, y: 0.35, r: 0.35, color: 'rgba(232,198,210,0.13)', targetX: 0.60, targetY: 0.35 },
+      { x: 0.70, y: 0.45, r: 0.28, color: 'rgba(216,138,154,0.14)', targetX: 0.70, targetY: 0.45 },
     ]
 
-    // Enhanced floating animations with more organic movement
+    // Animações mais simples
     blobs.forEach((b, i) => {
       const animateBlob = () => {
-        // More organic floating pattern
-        const moveRange = 0.15 + (i * 0.05)
-        const baseX = b.targetX
-        const baseY = b.targetY
-        
+        const moveRange = 0.08
         gsap.to(b, {
-          x: baseX + (Math.random() - 0.5) * moveRange,
-          y: baseY + (Math.random() - 0.5) * moveRange,
-          r: (0.20 + Math.random() * 0.35) + (i * 0.03),
-          duration: 8 + (i * 1.5) + Math.random() * 4,
+          x: b.targetX + (Math.random() - 0.5) * moveRange,
+          y: b.targetY + (Math.random() - 0.5) * moveRange,
+          r: b.r * (0.8 + Math.random() * 0.4),
+          duration: 6 + i * 2,
           ease: 'sine.inOut',
           onComplete: animateBlob,
         })
       }
-      
-      // Stagger the initial animations
-      gsap.delayedCall(i * 0.8, animateBlob)
+      gsap.delayedCall(i * 0.5, animateBlob)
     })
 
-    // Interactive mouse blob with enhanced responsiveness
+    // Mouse cursor simples
     const cursor = { 
-      x: 0.5, 
-      y: 0.5, 
-      r: 0.18, 
-      targetR: 0.18,
-      color: 'rgba(216,138,154,0.25)',
-      intensity: 0
+      x: 0.5, y: 0.5, r: 0.15, 
+      targetR: 0.15, intensity: 0
     }
 
     const draw = () => {
@@ -73,59 +67,21 @@ export default function FluidCanvas() {
       const H = canvas.offsetHeight
       ctx.clearRect(0, 0, W, H)
 
-      // Subtle animated gradient background
-      const time = Date.now() * 0.001
-      const base = ctx.createRadialGradient(
-        W * (0.5 + Math.sin(time * 0.3) * 0.1), 
-        H * (0.5 + Math.cos(time * 0.2) * 0.1), 
-        0,
-        W * 0.5, 
-        H * 0.5, 
-        Math.max(W, H)
-      )
+      // Background simples
+      const base = ctx.createLinearGradient(0, 0, W, H)
       base.addColorStop(0, '#FEFCFD')
-      base.addColorStop(0.3, '#FDF8FA')
-      base.addColorStop(0.7, '#FAF0F3')
       base.addColorStop(1, '#F7E8ED')
       ctx.fillStyle = base
       ctx.fillRect(0, 0, W, H)
 
-      // Enhanced blob rendering with glow effects
-      const allBlobs = [...blobs]
-      
-      // First pass: larger glows
-      ctx.globalCompositeOperation = 'multiply'
-      allBlobs.forEach((b) => {
-        const cx = b.x * W
-        const cy = b.y * H
-        const radius = b.r * Math.min(W, H) * 1.8
-        
-        const outerGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius)
-        outerGlow.addColorStop(0, b.color.replace(/[\d\.]+\)$/g, '0.06)'))
-        outerGlow.addColorStop(0.5, b.color.replace(/[\d\.]+\)$/g, '0.03)'))
-        outerGlow.addColorStop(1, 'rgba(255,255,255,0)')
-        
-        ctx.beginPath()
-        ctx.arc(cx, cy, radius, 0, Math.PI * 2)
-        ctx.fillStyle = outerGlow
-        ctx.fill()
-      })
-
-      // Second pass: main blobs with enhanced gradients
-      ctx.globalCompositeOperation = 'normal'
-      allBlobs.forEach((b) => {
+      // Blobs simples sem glow
+      blobs.forEach((b) => {
         const cx = b.x * W
         const cy = b.y * H
         const radius = b.r * Math.min(W, H)
         
-        // Multi-stop radial gradient for more depth
-        const g = ctx.createRadialGradient(
-          cx - radius * 0.2, cy - radius * 0.2, 0,
-          cx, cy, radius
-        )
-        g.addColorStop(0, b.color.replace(/[\d\.]+\)$/g, '0.20)'))
-        g.addColorStop(0.4, b.color)
-        g.addColorStop(0.8, b.color.replace(/[\d\.]+\)$/g, '0.05)'))
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius)
+        g.addColorStop(0, b.color)
         g.addColorStop(1, 'rgba(255,255,255,0)')
         
         ctx.beginPath()
@@ -134,20 +90,18 @@ export default function FluidCanvas() {
         ctx.fill()
       })
 
-      // Interactive mouse cursor blob with pulsing effect
+      // Mouse cursor simples
       if (cursor.intensity > 0.01) {
         const cx = cursor.x * W
         const cy = cursor.y * H
         const radius = cursor.r * Math.min(W, H)
-        const pulseRadius = radius * (1 + Math.sin(Date.now() * 0.008) * 0.3)
         
-        const mouseGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseRadius)
-        mouseGlow.addColorStop(0, `rgba(216,138,154,${cursor.intensity * 0.35})`)
-        mouseGlow.addColorStop(0.5, `rgba(237,181,192,${cursor.intensity * 0.18})`)
+        const mouseGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius)
+        mouseGlow.addColorStop(0, `rgba(216,138,154,${cursor.intensity * 0.2})`)
         mouseGlow.addColorStop(1, 'rgba(255,255,255,0)')
         
         ctx.beginPath()
-        ctx.arc(cx, cy, pulseRadius, 0, Math.PI * 2)
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2)
         ctx.fillStyle = mouseGlow
         ctx.fill()
       }
@@ -155,24 +109,19 @@ export default function FluidCanvas() {
       animRef.current = requestAnimationFrame(draw)
     }
 
-    // Enhanced mouse tracking with momentum
+    // Mouse tracking simples
     let isMoving = false
-    let moveTimeout
-
     const updateCursor = () => {
       gsap.to(cursor, {
         x: mouse.current.x,
         y: mouse.current.y,
-        r: isMoving ? cursor.targetR * 2.2 : cursor.targetR,
         intensity: isMoving ? 1 : 0,
-        duration: isMoving ? 0.3 : 1.5,
-        ease: isMoving ? 'power2.out' : 'power3.out',
-        overwrite: 'auto',
+        duration: 0.5,
+        ease: 'power2.out',
       })
     }
 
     gsap.ticker.add(updateCursor)
-    draw()
 
     const onMove = (e) => {
       const rect = canvas.getBoundingClientRect()
@@ -180,42 +129,37 @@ export default function FluidCanvas() {
         x: (e.clientX - rect.left) / rect.width,
         y: (e.clientY - rect.top) / rect.height,
       }
-      
       isMoving = true
-      clearTimeout(moveTimeout)
-      moveTimeout = setTimeout(() => {
-        isMoving = false
-      }, 150)
+      setTimeout(() => isMoving = false, 100)
     }
 
-    const onLeave = () => {
-      isMoving = false
-      gsap.to(cursor, {
-        intensity: 0,
-        r: cursor.targetR,
-        duration: 2,
-        ease: 'power2.out'
-      })
-    }
-
-    canvas.addEventListener('mousemove', onMove)
-    canvas.addEventListener('mouseleave', onLeave)
+    canvas.addEventListener('mousemove', onMove, { passive: true })
+    animRef.current = requestAnimationFrame(draw)
 
     return () => {
       window.removeEventListener('resize', resize)
       canvas.removeEventListener('mousemove', onMove)
-      canvas.removeEventListener('mouseleave', onLeave)
-      clearTimeout(moveTimeout)
       cancelAnimationFrame(animRef.current)
+      gsap.ticker.remove(updateCursor)
       gsap.globalTimeline.clear()
     }
   }, [])
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-auto"
-      style={{ display: 'block' }}
-    />
+    <>
+      {/* Canvas para desktop */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full pointer-events-auto"
+        style={{ display: 'block' }}
+      />
+      {/* Background estático para mobile */}
+      <div 
+        className="absolute inset-0 w-full h-full md:hidden"
+        style={{
+          background: 'linear-gradient(135deg, #FEFCFD 0%, #FDF8FA 25%, #FAF0F3 75%, #F7E8ED 100%)',
+        }}
+      />
+    </>
   )
 }

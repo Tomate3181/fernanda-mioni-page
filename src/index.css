@@ -19,7 +19,7 @@
 }
 
 html {
-  /* Desabilitar scroll-behavior nativo para que o Lenis funcione */
+  /* Scroll behavior condicional - será controlado pelo JavaScript */
   scroll-behavior: auto;
 }
 
@@ -28,11 +28,11 @@ body {
   color: #2D282A;
   background: #FFFFFF;
   -webkit-font-smoothing: antialiased;
-  /* Otimizações para Lenis */
+  /* Otimizações gerais */
   overflow-x: hidden;
 }
 
-/* Lenis classes para melhor compatibilidade */
+/* Lenis classes para melhor compatibilidade (apenas desktop) */
 html.lenis,
 html.lenis body {
   height: auto;
@@ -44,6 +44,42 @@ html.lenis body {
 
 .lenis.lenis-smooth [data-lenis-prevent] {
   overscroll-behavior: contain;
+}
+
+/* Mobile: otimizar scroll nativo */
+@media (max-width: 768px) {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    /* Melhorar performance de scroll em mobile */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+  
+  /* Desabilitar animações pesadas em mobile */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  /* Hero elements aparecem imediatamente em mobile */
+  .hero-badge, .hero-h1, .hero-sub, .hero-cta, .hero-stats, .hero-img {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  /* Simplificar transforms e shadows em mobile */
+  .group:hover {
+    transform: none !important;
+  }
+  
+  /* Reduzir blur effects em mobile */
+  [style*="backdrop-filter"], [style*="backdropFilter"] {
+    backdrop-filter: none !important;
+  }
 }
 
 ::-webkit-scrollbar {

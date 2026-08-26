@@ -10,6 +10,15 @@ export default function Hero() {
 
   // Entrance animations
   useEffect(() => {
+    // Detectar mobile e desabilitar animações pesadas
+    const isMobile = 'ontouchstart' in window || window.innerWidth <= 768
+    
+    if (isMobile) {
+      // Mobile: sem animações GSAP, apenas fade-in CSS
+      return
+    }
+
+    // Desktop: animações GSAP completas
     const ctx = gsap.context(() => {
       gsap.from('.hero-badge', { opacity: 0, y: 16, duration: 0.7, delay: 0.3, ease: 'power2.out' })
       gsap.from('.hero-h1', { opacity: 0, y: 32, duration: 0.9, delay: 0.5, ease: 'power3.out' })

@@ -4,24 +4,37 @@ export default function BackToTop() {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    // Detectar mobile para otimizar listeners
+    const isMobile = 'ontouchstart' in window || window.innerWidth <= 768
+
     const toggleVisibility = () => {
-      // Mostrar botão após scroll de 300px
       setIsVisible(window.pageYOffset > 300)
     }
 
-    window.addEventListener('scroll', toggleVisibility)
+    // Throttle em mobile para performance
+    let ticking = false
+    const optimizedScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          toggleVisibility()
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    const scrollHandler = isMobile ? optimizedScroll : toggleVisibility
+    window.addEventListener('scroll', scrollHandler, { passive: true })
     
     return () => {
-      window.removeEventListener('scroll', toggleVisibility)
+      window.removeEventListener('scroll', scrollHandler)
     }
   }, [])
 
   const scrollToTop = () => {
     if (window.scrollToSection) {
-      // Usar Lenis se disponível
       window.scrollToSection('#top')
     } else {
-      // Fallback para scroll nativo
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
@@ -29,8 +42,8 @@ export default function BackToTop() {
   return (
     <button
       onClick={scrollToTop}
-      className={`fixed bottom-8 right-8 z-40 w-12 h-12 rounded-full transition-all duration-300 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+      className={`fixed bottom-6 right-6 md:bottom-8 md:right-8 z-40 w-12 h-12 md:w-14 md:h-14 rounded-full transition-opacity duration-300 touch-manipulation ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
       style={{
         background: 'linear-gradient(135deg, #D88A9A 0%, #c47485 100%)',
@@ -43,7 +56,7 @@ export default function BackToTop() {
         fill="none" 
         stroke="white" 
         strokeWidth={2} 
-        className="w-5 h-5 mx-auto"
+        className="w-5 h-5 md:w-6 md:h-6 mx-auto"
       >
         <path strokeLinecap="round" strokeLinejoin="round" d="m18 15-6-6-6 6" />
       </svg>
