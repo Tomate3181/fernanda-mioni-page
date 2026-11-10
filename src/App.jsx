@@ -1,23 +1,28 @@
-import Header from '@/components/Header'
-import Hero from '@/components/Hero'
-import Features from '@/components/Features'
-import About from '@/components/About'
-import Services from '@/components/Services'
-import BeforeAfter from '@/components/BeforeAfter'
-import Testimonials from '@/components/Testimonials'
-import LocationFaq from '@/components/LocationFaq'
-import Footer from '@/components/Footer'
-import BackToTop from '@/components/BackToTop'
-import { useSmoothScroll } from '@/hooks/useSmoothScroll'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import BackToTop from '@/components/layout/BackToTop'
+import Hero from '@/components/sections/Hero'
+import Features from '@/components/sections/Features'
+import About from '@/components/sections/About'
+import Services from '@/components/sections/Services'
+import BeforeAfter from '@/components/sections/BeforeAfter'
+import Testimonials from '@/components/sections/Testimonials'
+import LocationFaq from '@/components/sections/LocationFaq'
+import { useSmoothScroll } from '@/lib/useSmoothScroll'
 
 export default function App() {
-  // Inicializar smooth scroll
   useSmoothScroll()
 
   return (
-    <div id="top" style={{ fontFamily: 'var(--font-body)' }}>
+    <>
+      <a
+        href="#conteudo"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:shadow-float"
+      >
+        Pular para o conteúdo
+      </a>
       <Header />
-      <main>
+      <main id="conteudo">
         <Hero />
         <Features />
         <About />
@@ -28,6 +33,6 @@ export default function App() {
       </main>
       <Footer />
       <BackToTop />
-    </div>
+    </>
   )
 }

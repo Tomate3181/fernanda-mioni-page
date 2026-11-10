@@ -1,3 +1,4 @@
+// ATENÇÃO: depoimentos de exemplo. Serão substituídos pelas avaliações reais do Google.
 export const TESTIMONIALS = [
   {
     name: 'Ana Clara M.',
