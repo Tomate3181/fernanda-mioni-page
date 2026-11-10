@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback } from 'react'
 import { IconArrows } from '@/components/icons'
+import antesFoto from '@/imports/new/Antes.png'
+import depoisFoto from '@/imports/new/Depois_.png'
 
 export default function BeforeAfter() {
   const [pos, setPos] = useState(50)
@@ -53,7 +55,7 @@ export default function BeforeAfter() {
         >
           {/* Before (left / full) */}
           <img
-            src="https://images.unsplash.com/photo-1547078902-2911dfaaa53a?w=1200&h=700&fit=crop&auto=format"
+            src={antesFoto}
             alt="Antes — olhar natural"
             className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             draggable={false}
@@ -65,7 +67,7 @@ export default function BeforeAfter() {
             style={{ clipPath: `inset(0 0 0 ${pos}%)` }}
           >
             <img
-              src="https://images.unsplash.com/photo-1633346152343-5486573d3d50?w=1200&h=700&fit=crop&auto=format"
+              src={depoisFoto}
               alt="Depois — cílios com extensão Fernanda Mioni"
               className="absolute inset-0 w-full h-full object-cover pointer-events-none"
               draggable={false}
@@ -108,7 +110,7 @@ export default function BeforeAfter() {
 
         {/* Placeholder note */}
         <p className="text-center text-xs text-[#7A7375] mt-5 opacity-60">
-          Imagens meramente ilustrativas — fotos reais do trabalho serão inseridas em breve.
+          Resultados reais obtidos no estúdio Fernanda Mioni.
         </p>
       </div>
     </section>

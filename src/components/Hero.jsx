@@ -61,7 +61,7 @@ export default function Hero() {
             }}
           >
             <span style={{ color: '#D88A9A' }}>✦</span>
-            Especialista · Cílios &amp; Sobrancelhas · Caçapava‑SP
+            Especialista · Cílios &amp; Sobrancelhas · Caçapava-SP
           </div>
 
           {/* Headline — bold & large */}
