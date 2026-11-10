@@ -97,10 +97,10 @@ export default function LocationFaq() {
               </div>
 
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Button href={address.mapsUrl} variant="neutral" icon={<IconMap className="size-4" />} className="flex-1">
+                <Button href={address.mapsUrl} variant="neutral" size="lg" icon={<IconMap className="size-4" />} className="w-full sm:flex-1">
                   Abrir no Maps
                 </Button>
-                <Button href={waLink()} icon={<IconWhatsApp />} className="flex-1">
+                <Button href={waLink()} size="lg" icon={<IconWhatsApp />} className="w-full sm:flex-1">
                   Agendar agora
                 </Button>
               </div>
