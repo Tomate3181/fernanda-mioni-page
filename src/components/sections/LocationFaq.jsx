@@ -8,7 +8,7 @@ import { IconChevronDown, IconClock, IconMap, IconWhatsApp } from '@/components/
 const { address } = SITE
 const mapEmbed =
   'https://www.google.com/maps?output=embed&q=' +
-  encodeURIComponent(`${address.street}, ${address.district}, ${address.city} - ${address.state}`)
+  encodeURIComponent(`${address.street}, ${address.district}, ${address.city} - ${address.state}, ${address.zip}`)
 
 function FaqItem({ q, a, open, onToggle }) {
   const id = useId()
@@ -74,9 +74,11 @@ export default function LocationFaq() {
                 <div>
                   <p className="mb-1 text-sm font-semibold text-charcoal">Endereço</p>
                   <address className="text-sm not-italic leading-relaxed text-muted-gray">
-                    {address.street}
+                    {address.street} — {address.complement}
                     <br />
                     {address.district} — {address.city}, {address.state}
+                    <br />
+                    CEP {address.zip}
                   </address>
                 </div>
               </div>

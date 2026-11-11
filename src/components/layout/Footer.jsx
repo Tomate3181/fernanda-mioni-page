@@ -58,9 +58,11 @@ export default function Footer() {
               {SITE.instagram.handle}
             </a>
             <address className="text-sm not-italic leading-relaxed text-white/60">
-              {address.street}
+              {address.street} — {address.complement}
               <br />
               {address.district} — {address.city}, {address.state}
+              <br />
+              CEP {address.zip}
             </address>
             <Button href={waLink()} variant="dark" size="sm" icon={<IconWhatsApp />} className="mt-2 self-start">
               Agendar pelo WhatsApp

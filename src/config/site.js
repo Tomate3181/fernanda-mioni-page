@@ -4,20 +4,22 @@ export const SITE = {
   name: 'Fernanda Mioni',
   tagline: 'Lash & Brow',
   url: 'https://fernandamioni.com.br', // TODO: trocar pelo domínio final
-  email: 'alinemioni1987@gmail.com', // TODO: confirmar e-mail definitivo
+  email: 'studioessenzacpv@gmail.com',
   whatsapp: '5512996002138',
   instagram: {
     handle: '@felashdesigner',
     url: 'https://instagram.com/felashdesigner',
   },
   address: {
-    street: 'Rua Coronel Jaime Rolemberg de Lima, 370',
-    district: 'Jardim São José',
+    street: 'Rua Marquês de Herval, 391',
+    complement: 'Sala 03',
+    district: 'Centro',
+    zip: '12281-510',
     city: 'Caçapava',
     state: 'SP',
     mapsUrl:
       'https://www.google.com/maps/search/?api=1&query=' +
-      encodeURIComponent('Rua Coronel Jaime Rolemberg de Lima, 370, Jardim São José, Caçapava - SP'),
+      encodeURIComponent('Rua Marquês de Herval, 391, Centro, Caçapava - SP, 12281-510'),
   },
   hours: [
     { label: 'Segunda a sexta', value: '9h às 19h' },
