@@ -4,10 +4,10 @@ import { Button, ResponsiveImage, Section, SectionHeading } from '@/components/u
 import { IconWhatsApp } from '@/components/icons'
 
 const SPECIALTIES = [
-  { title: 'Tricologia capilar', description: 'Análise detalhada do couro cabeludo' },
-  { title: 'Lash & Brow design', description: 'Técnicas avançadas de extensão' },
+  { title: 'Extensão de cílios', description: 'Técnicas avançadas de extensão' },
+  { title: 'Design de sobrancelhas', description: 'Mapeamento personalizado do rosto' },
   { title: 'Micropigmentação', description: 'Fio a fio naturalíssimo' },
-  { title: 'Tratamentos capilares', description: 'Protocolos personalizados' },
+  { title: 'Hidra Gloss', description: 'Tratamento hidratante para os lábios' },
 ]
 
 const ACHIEVEMENTS = [
