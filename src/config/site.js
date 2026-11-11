@@ -21,13 +21,18 @@ export const SITE = {
       'https://www.google.com/maps/search/?api=1&query=' +
       encodeURIComponent('Rua Marquês de Herval, 391, Centro, Caçapava - SP, 12281-510'),
   },
+  google: {
+    placeId: 'ChIJv_kHRJ9RzJQRaDsuEn0zNsc',
+    profileUrl: 'https://www.google.com/maps/place/?q=place_id:ChIJv_kHRJ9RzJQRaDsuEn0zNsc',
+    reviewUrl: 'https://search.google.com/local/writereview?placeid=ChIJv_kHRJ9RzJQRaDsuEn0zNsc',
+  },
   hours: [
     { label: 'Segunda a sexta', value: '9h às 19h' },
     { label: 'Sábado', value: '9h às 16h' },
   ],
   stats: [
     { value: '500+', label: 'Clientes atendidas' },
-    { value: '5★', label: 'Avaliação Google' },
+    { value: '1:1', label: 'Atendimento exclusivo' },
     { value: '6 anos', label: 'De experiência' },
   ],
 }
