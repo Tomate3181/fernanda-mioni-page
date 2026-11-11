@@ -24,10 +24,10 @@ export default function About() {
         eyebrow="Sobre a profissional"
         title={
           <>
-            Especialista em <span className="italic text-rose-ink">Tricologia</span> e extensão de cílios
+            Especialista em <span className="italic text-rose-ink">extensão de cílios</span>
           </>
         }
-        description="Transformando vidas através da ciência capilar e da arte do embelezamento."
+        description="Olhares naturais e marcantes, com técnica apurada e o cuidado de quem também entende de tricologia."
         className="mb-14 md:mb-20"
       />
 
@@ -62,14 +62,14 @@ export default function About() {
         <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-4">
             <h3 className="font-display text-3xl font-medium leading-tight text-charcoal">
-              Uma jornada dedicada à beleza e à saúde capilar
+              Uma jornada dedicada à beleza do olhar
             </h3>
             <div className="flex flex-col gap-4 leading-relaxed text-muted-gray">
               <p>
-                Fernanda Mioni é <strong className="font-semibold text-charcoal">especialista em Tricologia</strong> e
-                extensão de cílios, com mais de 6 anos transformando a autoestima de suas clientes. Sua paixão pela
-                ciência capilar a levou a se especializar em análises detalhadas do couro cabeludo e tratamentos
-                personalizados.
+                Fernanda Mioni é <strong className="font-semibold text-charcoal">especialista em extensão de cílios</strong>,
+                com mais de 6 anos transformando a autoestima de suas clientes. Cada olhar é desenhado sob medida,
+                respeitando o formato do rosto e a saúde dos fios naturais. Formada também em Tricologia, ela une
+                técnica e conhecimento científico em cada atendimento.
               </p>
               <p>
                 Combinando conhecimento científico com sensibilidade artística, Fernanda oferece uma abordagem única que
@@ -105,11 +105,11 @@ export default function About() {
 
           <div>
             <Button
-              href={waLink('Olá Fernanda! Gostaria de agendar uma consulta de tricologia e conhecer seus tratamentos.')}
+              href={waLink('Olá Fernanda! Gostaria de agendar uma extensão de cílios.')}
               size="lg"
               icon={<IconWhatsApp className="size-5" />}
             >
-              Agendar consulta de tricologia
+              Agendar extensão de cílios
             </Button>
           </div>
         </div>
