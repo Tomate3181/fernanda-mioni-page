@@ -53,7 +53,7 @@ export default function Hero() {
           </h1>
 
           <p data-hero="copy" className="max-w-md text-base leading-relaxed text-ink-soft sm:text-lg">
-            Atendimento 1:1 com hora marcada no Centro. Técnicas sob medida com base em tricologia para cuidar dos fios
+            Atendimento com hora marcada no Centro. Técnicas sob medida com base em tricologia para cuidar dos fios
             naturais.
           </p>
 

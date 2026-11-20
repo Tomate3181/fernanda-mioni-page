@@ -180,7 +180,7 @@ export default function Booking({ onOpenPrivacy }) {
                 <IconCalendar className="size-4" />
               </span>
               <div>
-                <p className="text-sm font-semibold text-charcoal">Atendimento 1:1 com hora marcada</p>
+                <p className="text-sm font-semibold text-charcoal">Atendimento com hora marcada</p>
                 <p className="text-sm text-muted-gray">
                   Prefere falar direto? Chame no{' '}
                   <a
