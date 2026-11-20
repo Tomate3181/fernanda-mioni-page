@@ -3,113 +3,93 @@ import { waLink } from '@/lib/whatsapp'
 import { Button, ResponsiveImage, Section, SectionHeading } from '@/components/ui'
 import { IconWhatsApp } from '@/components/icons'
 
-const SPECIALTIES = [
-  { title: 'Extensão de cílios', description: 'Técnicas avançadas de extensão' },
-  { title: 'Design de sobrancelhas', description: 'Mapeamento personalizado do rosto' },
-  { title: 'Micropigmentação', description: 'Fio a fio naturalíssimo' },
-  { title: 'Hidra Gloss', description: 'Tratamento hidratante para os lábios' },
-]
-
-const ACHIEVEMENTS = [
-  'Mais de 6 anos de experiência',
-  'Especialização em Tricologia',
-  'Certificações nacionais e internacionais',
-  'Mais de 500 clientes atendidas',
+const CREDENTIALS = [
+  {
+    title: 'Extensão de cílios',
+    detail: 'Volume Brasileiro, Russo, Fox Eye e Lash Lifting.',
+  },
+  {
+    title: 'Sobrancelhas e lábios',
+    detail: 'Design estratégico, micropigmentação fio a fio e Hidra Gloss.',
+  },
+  {
+    title: 'Formação em Tricologia',
+    detail: 'Análise dos fios naturais para extensão segura e durável.',
+  },
+  {
+    title: '6+ anos em Caçapava',
+    detail: 'Mais de 500 clientes atendidas com certificações internacionais.',
+  },
 ]
 
 export default function About() {
   return (
     <Section id="sobre" tone="white" className="overflow-hidden">
       <SectionHeading
-        eyebrow="Sobre a profissional"
         title={
           <>
-            Especialista em <span className="italic text-rose-ink">extensão de cílios</span>
+            Fernanda Mioni · <span className="italic text-rose-ink">Cílios e Tricologia</span>
           </>
         }
-        description="Olhares naturais e marcantes, com técnica apurada e o cuidado de quem também entende de tricologia."
-        className="mb-14 md:mb-20"
+        description="Mais de 6 anos em Caçapava unindo estética precisa e cuidado com a saúde dos fios."
+        className="mb-12 md:mb-16"
       />
 
-      <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
-        {/* Foto */}
-        <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+      <div className="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
+        {/* Foto com moldura arquitetônica limpa */}
+        <div data-reveal className="relative mx-auto w-full max-w-md lg:max-w-none">
           <div
             aria-hidden="true"
-            className="absolute -inset-5 rounded-[2rem] bg-[linear-gradient(135deg,rgb(226_207_180/0.25),rgb(216_138_154/0.08))] sm:-inset-8"
+            className="absolute -inset-3 rounded-[1.9rem] border border-champagne/65 bg-bg-cream sm:-inset-4"
           />
-          <div className="relative overflow-hidden rounded-3xl shadow-photo ring-1 ring-rose-gold/20">
+          <div className="group relative overflow-hidden rounded-3xl shadow-photo">
             <ResponsiveImage
               image={IMAGES.aboutFernanda}
-              alt="Fernanda Mioni segurando equipamento de análise capilar"
-              sizes="(min-width: 1024px) 560px, (min-width: 640px) 448px, 90vw"
-              className="aspect-[4/5] w-full object-cover"
+              alt="Fernanda Mioni segurando equipamento de análise capilar no estúdio"
+              sizes="(min-width: 1024px) 520px, (min-width: 640px) 448px, 90vw"
+              className="aspect-[4/5] w-full object-cover transition-transform duration-700 ease-soft group-hover:scale-[1.025]"
             />
           </div>
 
           {/* Selo de certificação */}
-          <div className="absolute -bottom-6 -right-2 flex items-center gap-3 rounded-2xl border border-champagne/50 bg-white/95 py-3 pl-3 pr-5 shadow-float backdrop-blur sm:-right-6">
-            <ResponsiveImage image={IMAGES.seloTricologia} alt="" className="size-14 shrink-0" />
+          <div className="absolute -bottom-5 -right-2 flex items-center gap-3 rounded-2xl border border-champagne/65 bg-white py-2.5 pl-2.5 pr-4 shadow-float sm:-right-5">
+            <ResponsiveImage image={IMAGES.seloTricologia} alt="" sizes="56px" className="size-12 shrink-0 sm:size-14" />
             <div className="leading-tight">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-rose-ink">Certificada</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-rose-ink">Certificada</p>
               <p className="text-sm font-semibold text-charcoal">Master in Lash &amp; Brow</p>
               <p className="text-xs text-muted-gray">Trichology</p>
             </div>
           </div>
         </div>
 
-        {/* Texto */}
-        <div className="flex flex-col gap-10">
-          <div className="flex flex-col gap-4">
+        {/* Texto conciso e escaneável */}
+        <div data-reveal className="flex flex-col gap-8">
+          <div className="flex flex-col gap-3">
             <h3 className="font-display text-3xl font-medium leading-tight text-charcoal">
-              Uma jornada dedicada à beleza do olhar
+              Estética do olhar com base científica
             </h3>
-            <div className="flex flex-col gap-4 leading-relaxed text-muted-gray">
-              <p>
-                Fernanda Mioni é <strong className="font-semibold text-charcoal">especialista em extensão de cílios</strong>,
-                com mais de 6 anos transformando a autoestima de suas clientes. Cada olhar é desenhado sob medida,
-                respeitando o formato do rosto e a saúde dos fios naturais. Formada também em Tricologia, ela une
-                técnica e conhecimento científico em cada atendimento.
-              </p>
-              <p>
-                Combinando conhecimento científico com sensibilidade artística, Fernanda oferece uma abordagem única que
-                vai além da estética — ela cuida da saúde dos seus fios e cílios, garantindo resultados duradouros e
-                naturais.
-              </p>
-            </div>
+            <p className="text-base leading-relaxed text-muted-gray">
+              Formada em Tricologia, Fernanda analisa a resistência dos fios naturais antes de cada procedimento. Assim
+              cada extensão mantém leveza, retenção prolongada e crescimento saudável.
+            </p>
           </div>
 
-          <div className="flex flex-col gap-4">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-rose-ink">Especialidades</h4>
-            <ul className="grid gap-3 sm:grid-cols-2">
-              {SPECIALTIES.map((s) => (
-                <li key={s.title} className="rounded-2xl border border-champagne/40 bg-bg-soft p-4">
-                  <p className="mb-0.5 text-sm font-semibold text-charcoal">{s.title}</p>
-                  <p className="text-xs text-muted-gray">{s.description}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ul data-reveal-group className="grid gap-4 sm:grid-cols-2">
+            {CREDENTIALS.map((item) => (
+              <li key={item.title} data-reveal-item className="border-t border-champagne/65 pt-4">
+                <p className="text-sm font-semibold text-charcoal">{item.title}</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-gray">{item.detail}</p>
+              </li>
+            ))}
+          </ul>
 
-          <div className="flex flex-col gap-4">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-rose-ink">Conquistas</h4>
-            <ul className="grid gap-2.5 sm:grid-cols-2">
-              {ACHIEVEMENTS.map((a) => (
-                <li key={a} className="flex items-center gap-3 text-sm text-muted-gray">
-                  <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-rose-gold" />
-                  {a}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
+          <div className="pt-1">
             <Button
-              href={waLink('Olá Fernanda! Gostaria de agendar uma extensão de cílios.')}
+              href={waLink('Olá Fernanda! Gostaria de agendar uma avaliação ou extensão de cílios.')}
               size="lg"
               icon={<IconWhatsApp className="size-5" />}
             >
-              Agendar extensão de cílios
+              Agendar pelo WhatsApp
             </Button>
           </div>
         </div>

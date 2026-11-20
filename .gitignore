@@ -26,3 +26,8 @@ dist-ssr
 # Fotos originais em alta resolução (fonte do script de otimização)
 assets-originais/
 .claude/
+.agents/
+.taste-skill/
+skills-lock.json
+
+prismcode/

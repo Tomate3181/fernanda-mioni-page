@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { SERVICES, SERVICE_TABS } from '@/data/services'
 import { waLink } from '@/lib/whatsapp'
 import { Button, ResponsiveImage, Section, SectionHeading, cn } from '@/components/ui'
@@ -13,33 +13,72 @@ const GRID = {
 
 export default function Services() {
   const [active, setActive] = useState(SERVICE_TABS[0].key)
+  const listRef = useRef(null)
   const tabRefs = useRef([])
+  const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false })
   const items = SERVICES[active]
 
-  // Setas do teclado navegam entre as abas (padrão WAI-ARIA)
+  const activeIndex = SERVICE_TABS.findIndex((t) => t.key === active)
+
+  const syncIndicator = useCallback(() => {
+    const btn = tabRefs.current[activeIndex]
+    if (!btn) return
+    setIndicator({ left: btn.offsetLeft, width: btn.offsetWidth, ready: true })
+  }, [activeIndex])
+
+  useLayoutEffect(() => {
+    syncIndicator()
+  }, [syncIndicator])
+
+  useEffect(() => {
+    const container = listRef.current
+    if (!container) return
+    const ro = new ResizeObserver(syncIndicator)
+    ro.observe(container)
+    return () => ro.disconnect()
+  }, [syncIndicator])
+
+  // Navegação completa por teclado nas abas (WAI-ARIA)
   const onKeyDown = (e, index) => {
-    const dir = { ArrowRight: 1, ArrowLeft: -1 }[e.key]
-    if (!dir) return
-    const next = (index + dir + SERVICE_TABS.length) % SERVICE_TABS.length
+    let next = null
+    if (e.key === 'ArrowRight') next = (index + 1) % SERVICE_TABS.length
+    else if (e.key === 'ArrowLeft') next = (index - 1 + SERVICE_TABS.length) % SERVICE_TABS.length
+    else if (e.key === 'Home') next = 0
+    else if (e.key === 'End') next = SERVICE_TABS.length - 1
+
+    if (next === null) return
+    e.preventDefault()
     setActive(SERVICE_TABS[next].key)
     tabRefs.current[next]?.focus()
   }
 
   return (
-    <Section id="servicos" tone="soft">
+    <Section id="servicos" tone="soft" className="py-16 md:py-24">
       <SectionHeading
-        eyebrow="Catálogo de serviços"
-        title="Escolha o seu estilo"
-        description="Cada técnica é aplicada com precisão e personalizada para o formato do seu olho."
-        className="mb-10"
+        title="Procedimentos sob medida"
+        description="Escolha a categoria para comparar duração, acabamento e solicitar seu horário."
+        className="mb-7 md:mb-9"
       />
 
-      <div className="mb-10 flex justify-center">
+      {/* Abas com indicador deslizante suave (zero salto seco) */}
+      <div data-reveal className="mb-8 flex justify-center md:mb-10">
         <div
+          ref={listRef}
           role="tablist"
           aria-label="Categorias de serviço"
-          className="inline-flex gap-1 rounded-full border border-champagne/50 bg-champagne/20 p-1"
+          className="relative inline-flex max-w-full items-center gap-1 rounded-full border border-champagne/65 bg-white p-1 shadow-card"
         >
+          <span
+            aria-hidden="true"
+            style={{
+              width: `${indicator.width}px`,
+              transform: `translateX(${indicator.left - 4}px)`,
+            }}
+            className={cn(
+              'pointer-events-none absolute bottom-1 left-1 top-1 rounded-full bg-rose-ink transition-[transform,width,opacity] duration-350 ease-soft',
+              indicator.ready ? 'opacity-100' : 'opacity-0',
+            )}
+          />
           {SERVICE_TABS.map((t, i) => {
             const selected = active === t.key
             return (
@@ -56,8 +95,8 @@ export default function Services() {
                 onClick={() => setActive(t.key)}
                 onKeyDown={(e) => onKeyDown(e, i)}
                 className={cn(
-                  'rounded-full px-4 py-2.5 text-xs font-semibold tracking-wide transition-[background-color,color,box-shadow] duration-300 sm:px-6 sm:text-sm',
-                  selected ? 'bg-rose-gradient text-white shadow-cta' : 'text-muted-gray hover:text-charcoal',
+                  'relative z-10 min-h-10 rounded-full px-4 py-2 text-xs font-semibold tracking-wide transition-colors duration-300 ease-soft sm:px-6 sm:text-sm',
+                  selected ? 'text-white' : 'text-muted-gray hover:text-charcoal',
                 )}
               >
                 {t.label}
@@ -77,25 +116,25 @@ export default function Services() {
         {items.map((s, i) => (
           <li
             key={s.title}
-            style={{ animationDelay: `${i * 70}ms` }}
-            className="group flex animate-fade-up flex-col overflow-hidden rounded-3xl border border-champagne/40 bg-white shadow-card transition-[transform,box-shadow] duration-500 ease-soft hover:-translate-y-1.5 hover:shadow-card-hover"
+            style={{ animationDelay: `${i * 55}ms` }}
+            className="group flex animate-fade-up flex-col overflow-hidden rounded-3xl border border-champagne/55 bg-white shadow-card transition-[border-color,box-shadow] duration-300 ease-soft hover:border-rose-ink/40 hover:shadow-card-hover"
           >
             <div className="relative overflow-hidden bg-bg-cream">
               <ResponsiveImage
                 image={s.image}
-                alt={`${s.title} — trabalho de Fernanda Mioni`}
+                alt={`${s.title} — procedimento realizado por Fernanda Mioni`}
                 sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 92vw"
-                className="aspect-[4/5] w-full object-cover transition-transform duration-700 ease-soft group-hover:scale-105"
+                className="aspect-square w-full object-cover transition-transform duration-600 ease-soft group-hover:scale-[1.035]"
               />
-              <span className="glass absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold text-rose-ink">
-                <IconClock className="size-3.5" />
+              <span className="glass tabular-lining absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-white/70 px-2.5 py-1 text-xs font-semibold text-charcoal">
+                <IconClock className="size-3.5 text-rose-ink" />
                 {s.duration}
               </span>
             </div>
 
-            <div className="flex flex-1 flex-col gap-3 p-5">
+            <div className="flex flex-1 flex-col gap-2.5 p-5">
               <div>
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-rose-ink">{s.style}</p>
+                <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-rose-ink">{s.style}</p>
                 <h3 className="font-display text-2xl font-medium leading-tight text-charcoal">{s.title}</h3>
               </div>
               <p className="flex-1 text-sm leading-relaxed text-muted-gray">{s.desc}</p>
@@ -106,7 +145,7 @@ export default function Services() {
                 icon={<IconWhatsApp />}
                 className="mt-2 w-full"
               >
-                Quero este estilo
+                Agendar este estilo
               </Button>
             </div>
           </li>

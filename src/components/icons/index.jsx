@@ -122,3 +122,43 @@ export const IconEye = ({ className = 'size-6' }) => (
     <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
   </Outline>
 )
+
+export const IconCheck = ({ className = 'size-4' }) => (
+  <Outline className={className} strokeWidth={2}>
+    <path d="M4.5 12.75l6 6 9-13.5" />
+  </Outline>
+)
+
+export const IconAlert = ({ className = 'size-4' }) => (
+  <Outline className={className} strokeWidth={1.8}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 8v4m0 4h.01" />
+  </Outline>
+)
+
+export const IconShield = ({ className = 'size-5' }) => (
+  <Outline className={className}>
+    <path d="M12 3l7.5 3v6c0 4.5-3.2 7.8-7.5 9-4.3-1.2-7.5-4.5-7.5-9V6L12 3z" />
+    <path d="M9.5 12.25l1.75 1.75 3.5-3.75" />
+  </Outline>
+)
+
+export const IconCalendar = ({ className = 'size-5' }) => (
+  <Outline className={className}>
+    <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
+    <path d="M8 3.5v3m8-3v3M3.5 9.5h17" />
+  </Outline>
+)
+
+export const IconLoader = ({ className = 'size-4' }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={`animate-spin ${className}`} aria-hidden="true">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.2" className="opacity-25" />
+    <path
+      d="M21 12a9 9 0 00-9-9"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+    />
+  </svg>
+)
+

@@ -1,23 +1,18 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * Fundo "lava lamp": bolhas que sobem, descem e se fundem como cera derretida.
+ * Fundo "lava lamp": bolhas orgânicas em canvas que usam a paleta da marca.
  *
- * Técnica: metaballs. Para cada pixel somamos a "influência" de cada bolha
- * (r² / distância²). Onde a soma passa de ~1 existe cera. Quando duas bolhas
- * se aproximam, as influências se somam e elas se fundem naturalmente.
- *
- * Para ficar leve, o campo é calculado numa grade de baixa resolução (1 ponto
- * a cada CELL px) e o navegador amplia o canvas com suavização — as bordas
- * ficam macias de graça. Pausa fora da tela, com a aba oculta e respeita
- * "reduzir movimento".
+ * Otimizado para dispositivos fracos e acessibilidade:
+ * - Em celulares, aparelhos com <= 4 núcleos, Save-Data ativo ou
+ *   `prefers-reduced-motion: reduce`, desenha apenas 1 quadro estático
+ *   suave (zero loop contínuo de CPU, zero travamento de rolagem).
+ * - Em desktops capazes, roda a ~30 fps e pausa fora da viewport ou aba oculta.
  */
 
-// px de tela por ponto calculado (menor = mais nítido e mais pesado)
-const CELL_DESKTOP = 4
-const CELL_MOBILE = 6
+const CELL_DESKTOP = 5
+const CELL_STATIC = 6
 
-// Cores da marca (RGB)
 const PALETTE = [
   [216, 138, 154], // rose-gold
   [237, 181, 192], // rose-gold-light
@@ -25,7 +20,6 @@ const PALETTE = [
   [200, 120, 140], // rose profundo
 ]
 
-// x: posição horizontal base (0–1) · r: raio relativo · period: segundos por ciclo
 const BLOBS = [
   { x: 0.78, r: 0.16, period: 34, phase: 0.0, color: 0 },
   { x: 0.62, r: 0.12, period: 41, phase: 2.1, color: 1 },
@@ -49,44 +43,37 @@ export default function LavaLamp({ className }) {
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reducedMql = window.matchMedia('(prefers-reduced-motion: reduce)')
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-    const frameInterval = finePointer ? 0 : 1000 / 30 // celulares: 30 fps bastam
-    const cell = finePointer ? CELL_DESKTOP : CELL_MOBILE
+    const lowEndDevice =
+      (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4) ||
+      Boolean(navigator.connection?.saveData)
+
+    const canAnimate = () => finePointer && !lowEndDevice && !reducedMql.matches
+    const frameInterval = 1000 / 30
+    const cell = finePointer && !lowEndDevice ? CELL_DESKTOP : CELL_STATIC
 
     let w = 0
     let h = 0
     let image = null
     let wide = true
 
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect()
-      w = Math.max(1, Math.ceil(rect.width / cell))
-      h = Math.max(1, Math.ceil(rect.height / cell))
-      canvas.width = w
-      canvas.height = h
-      image = ctx.createImageData(w, h)
-      wide = rect.width >= 768
-      if (!running) {
-        step(0)
-        draw()
-      }
-    }
-
-    // "Gota quente" que segue o cursor
     const heat = { x: 0.7, y: 0.5, tx: 0.7, ty: 0.5, r: 0, tr: 0 }
     let idleTimer
     const onPointerMove = (e) => {
+      if (!canAnimate()) return
       const rect = canvas.getBoundingClientRect()
       if (e.clientY > rect.bottom) return
       heat.tx = (e.clientX - rect.left) / rect.width
       heat.ty = (e.clientY - rect.top) / rect.height
       heat.tr = 0.075
       clearTimeout(idleTimer)
-      idleTimer = setTimeout(() => (heat.tr = 0.04), 1200)
+      idleTimer = setTimeout(() => {
+        heat.tr = 0.04
+      }, 1200)
     }
 
-    let time = 0
+    let time = 8
     const state = BLOBS.map(() => ({ x: 0, y: 0, r: 0, sy: 1, c: null }))
 
     const step = (dt) => {
@@ -95,11 +82,9 @@ export default function LavaLamp({ className }) {
       BLOBS.forEach((b, i) => {
         const s = state[i]
         const a = (time / b.period) * Math.PI * 2 + b.phase
-        // Sobe e desce como na lâmpada; no celular as bolhas ficam mais centralizadas
         const baseX = wide ? b.x : 0.2 + b.x * 0.6
         s.x = (baseX + Math.sin(a * 0.7 + b.phase) * 0.05) * w
         s.y = (0.5 + Math.sin(a) * 0.55) * h
-        // Estica na vertical quando está em movimento (velocidade ~ cos)
         s.sy = 1 + Math.abs(Math.cos(a)) * 0.35
         s.r = b.r * scale * (wide ? 1 : 1.25) * (1 + Math.sin(a * 1.7) * 0.08)
         s.c = PALETTE[b.color]
@@ -146,10 +131,8 @@ export default function LavaLamp({ className }) {
             cb += heatColor[2] * f
           }
 
-          // Borda definida da cera + interior que ganha cor aos poucos (sem "anéis")
-          let alpha = smoothstep(0.9, 1.12, field) * (0.36 + (1 - Math.exp(-Math.max(0, field - 1) * 0.35)) * 0.2)
-          // No desktop o lado do texto fica mais suave para não brigar com a leitura
-          if (wide) alpha *= 0.45 + 0.55 * smoothstep(0.15, 0.6, x / w)
+          let alpha = smoothstep(0.9, 1.12, field) * (0.32 + (1 - Math.exp(-Math.max(0, field - 1) * 0.35)) * 0.18)
+          if (wide) alpha *= 0.42 + 0.58 * smoothstep(0.15, 0.6, x / w)
 
           data[p] = cr / field
           data[p + 1] = cg / field
@@ -161,12 +144,25 @@ export default function LavaLamp({ className }) {
       ctx.putImageData(image, 0, 0)
     }
 
-    // Loop com pausa automática
     let running = false
     let visible = true
     let raf = 0
     let last = 0
     let acc = 0
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect()
+      w = Math.max(1, Math.ceil(rect.width / cell))
+      h = Math.max(1, Math.ceil(rect.height / cell))
+      canvas.width = w
+      canvas.height = h
+      image = ctx.createImageData(w, h)
+      wide = rect.width >= 768
+      if (!running) {
+        step(0)
+        draw()
+      }
+    }
 
     const loop = (now) => {
       const dt = Math.min(0.1, (now - last) / 1000)
@@ -181,7 +177,7 @@ export default function LavaLamp({ className }) {
     }
 
     const start = () => {
-      if (running || reducedMotion || !visible || document.hidden) return
+      if (running || !canAnimate() || !visible || document.hidden) return
       running = true
       last = performance.now()
       raf = requestAnimationFrame(loop)
@@ -197,9 +193,9 @@ export default function LavaLamp({ className }) {
       else stop()
     })
     const onVisibility = () => (document.hidden ? stop() : start())
+    const onMotionChange = () => (canAnimate() ? start() : stop())
     const ro = new ResizeObserver(resize)
 
-    time = 8 // começa com as bolhas já espalhadas
     resize()
     step(0)
     draw()
@@ -207,7 +203,10 @@ export default function LavaLamp({ className }) {
     ro.observe(canvas)
     io.observe(canvas)
     document.addEventListener('visibilitychange', onVisibility)
-    if (finePointer && !reducedMotion) window.addEventListener('pointermove', onPointerMove, { passive: true })
+    reducedMql.addEventListener('change', onMotionChange)
+    if (finePointer && !lowEndDevice) {
+      window.addEventListener('pointermove', onPointerMove, { passive: true })
+    }
     start()
 
     return () => {
@@ -216,6 +215,7 @@ export default function LavaLamp({ className }) {
       io.disconnect()
       clearTimeout(idleTimer)
       document.removeEventListener('visibilitychange', onVisibility)
+      reducedMql.removeEventListener('change', onMotionChange)
       window.removeEventListener('pointermove', onPointerMove)
     }
   }, [])

@@ -25,14 +25,19 @@ export default function BackToTop() {
       type="button"
       onClick={() => scrollToTarget(0)}
       aria-label="Voltar ao topo"
+      inert={!visible}
       tabIndex={visible ? 0 : -1}
       className={cn(
-        'fixed bottom-5 right-5 z-40 grid size-12 place-items-center rounded-full bg-rose-gradient text-white shadow-cta',
-        'transition-[opacity,transform,box-shadow] duration-500 ease-soft hover:-translate-y-0.5 hover:shadow-cta-hover md:bottom-8 md:right-8',
+        'group fixed bottom-5 right-5 z-40 isolate grid size-12 place-items-center overflow-hidden rounded-full border border-charcoal/15 bg-charcoal text-white shadow-float',
+        'transition-[opacity,transform,border-color] duration-350 ease-soft active:scale-[0.95] md:bottom-8 md:right-8',
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0',
       )}
     >
-      <IconArrowUp />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 translate-y-full rounded-full bg-rose-ink transition-transform duration-350 ease-soft group-hover:translate-y-0"
+      />
+      <IconArrowUp className="size-5 transition-transform duration-300 ease-soft group-hover:-translate-y-0.5" />
     </button>
   )
 }

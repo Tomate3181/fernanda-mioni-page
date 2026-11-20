@@ -1,47 +1,78 @@
 import { cn } from './cn'
 
+/*
+ * Botão editorial com hitbox 100% estável (nunca "foge" subindo no hover)
+ * e cortina interna suave que desliza de baixo para cima ao passar o cursor.
+ */
 const VARIANTS = {
-  primary:
-    'bg-rose-gradient text-white shadow-cta hover:shadow-cta-hover hover:-translate-y-0.5 active:translate-y-0',
-  secondary:
-    'glass border border-rose-gold/50 text-rose-ink hover:border-rose-gold hover:-translate-y-0.5 active:translate-y-0',
-  outline:
-    'border border-rose-gold/45 text-rose-ink hover:bg-rose-ink hover:border-rose-ink hover:text-white',
-  neutral:
-    'border border-charcoal/20 text-charcoal hover:bg-charcoal hover:border-charcoal hover:text-white',
-  dark:
-    'border border-rose-gold/35 bg-rose-gold/20 text-white hover:bg-rose-gold/35',
+  primary: {
+    base: 'bg-rose-ink text-white border border-rose-ink shadow-cta hover:border-charcoal hover:shadow-cta-hover',
+    fill: 'bg-charcoal',
+  },
+  secondary: {
+    base: 'bg-white/95 border border-charcoal/15 text-charcoal hover:border-rose-ink/50 hover:text-rose-ink',
+    fill: 'bg-blush',
+  },
+  outline: {
+    base: 'bg-transparent border border-rose-ink/45 text-rose-ink hover:border-rose-ink hover:text-white',
+    fill: 'bg-rose-ink',
+  },
+  neutral: {
+    base: 'bg-white border border-charcoal/20 text-charcoal hover:border-charcoal hover:text-white',
+    fill: 'bg-charcoal',
+  },
+  dark: {
+    base: 'bg-white/5 border border-white/25 text-white hover:border-rose-ink',
+    fill: 'bg-rose-ink',
+  },
 }
 
 const SIZES = {
-  sm: 'h-10 px-5 text-xs gap-1.5',
+  sm: 'h-11 px-5 text-xs gap-2',
   md: 'h-12 px-6 text-sm gap-2',
-  lg: 'h-14 px-7 text-sm gap-2.5',
+  lg: 'h-13 px-7 text-sm gap-2.5',
 }
 
 /**
  * Botão da marca. Com `href` vira link; links http abrem em nova aba.
  * Variantes: primary | secondary | outline | neutral | dark
  */
-export default function Button({ href, variant = 'primary', size = 'md', icon, className, children, ...props }) {
+export default function Button({
+  href,
+  variant = 'primary',
+  size = 'md',
+  icon,
+  className,
+  children,
+  type = 'button',
+  ...props
+}) {
+  const style = VARIANTS[variant] ?? VARIANTS.primary
+
   const classes = cn(
-    'group relative inline-flex select-none items-center justify-center overflow-hidden rounded-full font-semibold tracking-wide',
-    'transition-[transform,box-shadow,background-color,border-color,color] duration-300 ease-soft',
-    VARIANTS[variant],
+    'group relative isolate inline-flex select-none items-center justify-center overflow-hidden rounded-full font-semibold tracking-wide',
+    'transition-[color,border-color,box-shadow,transform] duration-300 ease-soft active:scale-[0.98]',
+    'disabled:pointer-events-none disabled:opacity-55',
+    style.base,
     SIZES[size],
     className,
   )
 
   const content = (
     <>
-      {variant === 'primary' && (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(105deg,transparent_30%,rgb(255_255_255/0.28)_50%,transparent_70%)] transition-transform duration-700 ease-soft group-hover:translate-x-full"
-        />
+      <span
+        aria-hidden="true"
+        className={cn(
+          'pointer-events-none absolute inset-0 -z-10 translate-y-[102%] rounded-full transition-transform duration-350 ease-soft group-hover:translate-y-0 group-focus-visible:translate-y-0',
+          style.fill,
+        )}
+      />
+      {icon && (
+        <span className="relative inline-flex shrink-0 transition-transform duration-300 ease-soft group-hover:scale-105">
+          {icon}
+        </span>
       )}
-      {icon}
-      <span className="relative">{children}</span>
+      <span className="relative inline-flex items-center">{children}</span>
     </>
   )
 
@@ -60,7 +91,7 @@ export default function Button({ href, variant = 'primary', size = 'md', icon, c
   }
 
   return (
-    <button type="button" className={classes} {...props}>
+    <button type={type} className={classes} {...props}>
       {content}
     </button>
   )

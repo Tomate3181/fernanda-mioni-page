@@ -3,9 +3,10 @@
 export const SITE = {
   name: 'Fernanda Mioni',
   tagline: 'Lash & Brow',
-  url: 'https://fernandamioni.com.br', // TODO: trocar pelo domínio final
+  url: 'https://fernandamioni.com.br',
   email: 'studioessenzacpv@gmail.com',
   whatsapp: '5512996002138',
+  whatsappDisplay: '(12) 99600-2138',
   instagram: {
     handle: '@felashdesigner',
     url: 'https://instagram.com/felashdesigner',
@@ -39,7 +40,8 @@ export const SITE = {
 
 export const NAV_LINKS = [
   { label: 'Serviços', href: '#servicos' },
-  { label: 'Sobre mim', href: '#sobre' },
+  { label: 'Sobre', href: '#sobre' },
   { label: 'Resultados', href: '#resultados' },
+  { label: 'Agendamento', href: '#agendamento' },
   { label: 'Localização', href: '#localizacao' },
 ]
