@@ -2,7 +2,8 @@ import { cn } from './cn'
 
 /*
  * Botão editorial com hitbox 100% estável (nunca "foge" subindo no hover)
- * e cortina interna suave que desliza de baixo para cima ao passar o cursor.
+ * e cortina interna suave isolada com named group (`group/btn`), para nunca
+ * conflitar quando o botão estiver dentro de cards que também usam `group`.
  */
 const VARIANTS = {
   primary: {
@@ -14,15 +15,15 @@ const VARIANTS = {
     fill: 'bg-blush',
   },
   outline: {
-    base: 'bg-transparent border border-rose-ink/45 text-rose-ink hover:border-rose-ink hover:text-white',
+    base: 'bg-transparent border border-rose-ink/45 text-rose-ink hover:border-rose-ink hover:text-white focus-visible:border-rose-ink focus-visible:text-white',
     fill: 'bg-rose-ink',
   },
   neutral: {
-    base: 'bg-white border border-charcoal/20 text-charcoal hover:border-charcoal hover:text-white',
+    base: 'bg-white border border-charcoal/20 text-charcoal hover:border-charcoal hover:text-white focus-visible:border-charcoal focus-visible:text-white',
     fill: 'bg-charcoal',
   },
   dark: {
-    base: 'bg-white/5 border border-white/25 text-white hover:border-rose-ink',
+    base: 'bg-white/5 border border-white/25 text-white hover:border-rose-ink focus-visible:border-rose-ink',
     fill: 'bg-rose-ink',
   },
 }
@@ -50,7 +51,7 @@ export default function Button({
   const style = VARIANTS[variant] ?? VARIANTS.primary
 
   const classes = cn(
-    'group relative isolate inline-flex select-none items-center justify-center overflow-hidden rounded-full font-semibold tracking-wide',
+    'group/btn relative isolate inline-flex select-none items-center justify-center overflow-hidden rounded-full font-semibold tracking-wide',
     'transition-[color,border-color,box-shadow,transform] duration-300 ease-soft active:scale-[0.98]',
     'disabled:pointer-events-none disabled:opacity-55',
     style.base,
@@ -63,12 +64,12 @@ export default function Button({
       <span
         aria-hidden="true"
         className={cn(
-          'pointer-events-none absolute inset-0 -z-10 translate-y-[102%] rounded-full transition-transform duration-350 ease-soft group-hover:translate-y-0 group-focus-visible:translate-y-0',
+          'pointer-events-none absolute inset-0 -z-10 translate-y-[102%] rounded-full transition-transform duration-350 ease-soft group-hover/btn:translate-y-0 group-focus-visible/btn:translate-y-0',
           style.fill,
         )}
       />
       {icon && (
-        <span className="relative inline-flex shrink-0 transition-transform duration-300 ease-soft group-hover:scale-105">
+        <span className="relative inline-flex shrink-0 transition-transform duration-300 ease-soft group-hover/btn:scale-105">
           {icon}
         </span>
       )}

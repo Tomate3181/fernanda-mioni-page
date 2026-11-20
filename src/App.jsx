@@ -5,7 +5,6 @@ import BackToTop from '@/components/layout/BackToTop'
 import CookieBanner from '@/components/layout/CookieBanner'
 import PrivacyModal from '@/components/layout/PrivacyModal'
 import Hero from '@/components/sections/Hero'
-import Features from '@/components/sections/Features'
 import About from '@/components/sections/About'
 import Services from '@/components/sections/Services'
 import BeforeAfter from '@/components/sections/BeforeAfter'
@@ -34,7 +33,6 @@ export default function App() {
       <Header />
       <main ref={mainRef} id="conteudo">
         <Hero />
-        <Features />
         <About />
         <Services />
         <BeforeAfter />

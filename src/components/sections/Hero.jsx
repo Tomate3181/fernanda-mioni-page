@@ -5,6 +5,7 @@ import { SITE } from '@/config/site'
 import { waLink } from '@/lib/whatsapp'
 import { Button, Container, ResponsiveImage } from '@/components/ui'
 import { IconArrowRight, IconWhatsApp } from '@/components/icons'
+import LavaLamp from '@/components/effects/LavaLamp'
 
 export default function Hero() {
   const root = useRef(null)
@@ -18,7 +19,6 @@ export default function Hero() {
         .timeline({ defaults: { ease: 'power3.out' } })
         .from(q('[data-hero="line"]'), { yPercent: 108, duration: 0.85, stagger: 0.09 }, 0.08)
         .from(q('[data-hero="copy"]'), { autoAlpha: 0, y: 18, duration: 0.7, stagger: 0.08 }, 0.34)
-        .from(q('[data-hero="frame"]'), { autoAlpha: 0, scale: 0.985, duration: 0.9 }, 0.16)
         .from(q('[data-hero="img"]'), { autoAlpha: 0, y: 24, scale: 1.03, duration: 1.05 }, 0.22)
     })
     return () => mm.revert()
@@ -28,13 +28,9 @@ export default function Hero() {
     <section
       ref={root}
       id="top"
-      className="relative isolate flex min-h-svh items-end overflow-hidden bg-blush/70 pt-20"
+      className="relative isolate flex min-h-svh items-end overflow-hidden bg-blush pt-20"
     >
-      {/* Fundo arquitetônico limpo em duas superfícies — zero glows borrados */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden w-[46%] border-l border-champagne/55 bg-bg-cream md:block"
-      />
+      <LavaLamp className="absolute inset-0 -z-10" />
 
       <Container className="grid items-end gap-8 md:grid-cols-[1.08fr_0.92fr] md:gap-10">
         <div className="flex max-w-xl flex-col gap-6 pb-2 pt-8 md:pb-20 md:pt-8 lg:pb-28">
@@ -72,7 +68,7 @@ export default function Hero() {
             </Button>
             <Button href="#servicos" variant="secondary" size="lg" className="w-full sm:w-auto">
               Ver serviços
-              <IconArrowRight className="ml-2 inline size-4 transition-transform duration-300 ease-soft group-hover:translate-x-1" />
+              <IconArrowRight className="ml-2 inline size-4 transition-transform duration-300 ease-soft group-hover/btn:translate-x-1" />
             </Button>
           </div>
 
@@ -90,20 +86,14 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Retrato editorial com moldura arquitetônica limpa (zero glow artificial) */}
         <div className="relative mx-auto w-full max-w-[20rem] self-end sm:max-w-sm md:mr-0 md:max-w-none">
-          <div
-            data-hero="frame"
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-4 bottom-0 top-10 rounded-t-[10rem] border border-b-0 border-champagne/75 bg-white/55 sm:inset-x-6 md:inset-x-8 md:top-12"
-          />
           <ResponsiveImage
             data-hero="img"
             image={IMAGES.heroFernanda}
             alt="Fernanda Mioni, especialista em extensão de cílios e design de sobrancelhas"
             sizes="(min-width: 768px) 44vw, 85vw"
             priority
-            className="relative mx-auto aspect-[854/1280] h-auto max-h-[48svh] w-auto object-contain object-bottom drop-shadow-[0_18px_36px_rgb(45_40_42/0.12)] sm:max-h-[56svh] md:max-h-[82svh]"
+            className="relative mx-auto aspect-[854/1280] h-auto max-h-[48svh] w-auto object-contain object-bottom drop-shadow-[0_18px_36px_rgb(45_40_42/0.14)] sm:max-h-[56svh] md:max-h-[82svh]"
           />
         </div>
       </Container>
