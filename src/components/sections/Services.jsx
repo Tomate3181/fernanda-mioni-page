@@ -120,12 +120,14 @@ export default function Services() {
             className="group flex animate-fade-up flex-col overflow-hidden rounded-3xl border border-champagne/55 bg-white shadow-card transition-[border-color,box-shadow] duration-300 ease-soft hover:border-rose-ink/40 hover:shadow-card-hover"
           >
             <div className="relative overflow-hidden bg-bg-cream">
-              <ResponsiveImage
-                image={s.image}
-                alt={`${s.title} — procedimento realizado por Fernanda Mioni`}
-                sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 92vw"
-                className="aspect-square w-full object-cover transition-transform duration-600 ease-soft group-hover:scale-[1.035]"
-              />
+              <div className="aspect-square w-full transition-transform duration-600 ease-soft group-hover:scale-[1.035]">
+                <ResponsiveImage
+                  image={s.image}
+                  alt={`${s.title} — procedimento realizado por Fernanda Mioni`}
+                  sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 92vw"
+                  className={cn('size-full object-cover', s.imageClass)}
+                />
+              </div>
               <span className="glass tabular-lining absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-white/70 px-2.5 py-1 text-xs font-semibold text-charcoal">
                 <IconClock className="size-3.5 text-rose-ink" />
                 {s.duration}

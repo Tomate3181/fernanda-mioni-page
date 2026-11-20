@@ -1,17 +1,17 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * Fundo "lava lamp": bolhas orgânicas em canvas que usam a paleta da marca.
+ * Fundo "lava lamp": metaballs orgânicas na paleta da marca que sobem,
+ * descem e se fundem suavemente em canvas de baixa resolução (leve na CPU).
  *
- * Otimizado para dispositivos fracos e acessibilidade:
- * - Em celulares, aparelhos com <= 4 núcleos, Save-Data ativo ou
- *   `prefers-reduced-motion: reduce`, desenha apenas 1 quadro estático
- *   suave (zero loop contínuo de CPU, zero travamento de rolagem).
- * - Em desktops capazes, roda a ~30 fps e pausa fora da viewport ou aba oculta.
+ * - Anima continuamente enquanto a hero está visível e a aba ativa.
+ * - No desktop responde ao movimento do cursor com uma gota quente suave.
+ * - Pausa automaticamente fora da tela, em abas ocultas ou sob
+ *   `prefers-reduced-motion: reduce`.
  */
 
-const CELL_DESKTOP = 5
-const CELL_STATIC = 6
+const CELL_DESKTOP = 6
+const CELL_MOBILE = 8
 
 const PALETTE = [
   [216, 138, 154], // rose-gold
@@ -20,14 +20,15 @@ const PALETTE = [
   [200, 120, 140], // rose profundo
 ]
 
+// x: posição horizontal base (0–1) · r: raio relativo · period: segundos por ciclo
 const BLOBS = [
-  { x: 0.78, r: 0.16, period: 34, phase: 0.0, color: 0 },
-  { x: 0.62, r: 0.12, period: 41, phase: 2.1, color: 1 },
-  { x: 0.9, r: 0.11, period: 29, phase: 4.0, color: 3 },
-  { x: 0.48, r: 0.1, period: 47, phase: 1.2, color: 2 },
-  { x: 0.7, r: 0.09, period: 26, phase: 5.1, color: 1 },
-  { x: 0.18, r: 0.11, period: 52, phase: 3.3, color: 2 },
-  { x: 0.3, r: 0.08, period: 38, phase: 0.7, color: 0 },
+  { x: 0.78, r: 0.165, period: 16, phase: 0.0, color: 0 },
+  { x: 0.62, r: 0.125, period: 19, phase: 2.1, color: 1 },
+  { x: 0.9, r: 0.115, period: 14, phase: 4.0, color: 3 },
+  { x: 0.48, r: 0.105, period: 22, phase: 1.2, color: 2 },
+  { x: 0.7, r: 0.095, period: 13, phase: 5.1, color: 1 },
+  { x: 0.18, r: 0.115, period: 24, phase: 3.3, color: 2 },
+  { x: 0.3, r: 0.085, period: 17, phase: 0.7, color: 0 },
 ]
 
 const smoothstep = (a, b, x) => {
@@ -45,13 +46,11 @@ export default function LavaLamp({ className }) {
 
     const reducedMql = window.matchMedia('(prefers-reduced-motion: reduce)')
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-    const lowEndDevice =
-      (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4) ||
-      Boolean(navigator.connection?.saveData)
+    const saveData = Boolean(navigator.connection?.saveData)
 
-    const canAnimate = () => finePointer && !lowEndDevice && !reducedMql.matches
-    const frameInterval = 1000 / 30
-    const cell = finePointer && !lowEndDevice ? CELL_DESKTOP : CELL_STATIC
+    const canAnimate = () => !reducedMql.matches && !saveData
+    const frameInterval = finePointer ? 1000 / 45 : 1000 / 28
+    const cell = finePointer ? CELL_DESKTOP : CELL_MOBILE
 
     let w = 0
     let h = 0
@@ -66,7 +65,7 @@ export default function LavaLamp({ className }) {
       if (e.clientY > rect.bottom) return
       heat.tx = (e.clientX - rect.left) / rect.width
       heat.ty = (e.clientY - rect.top) / rect.height
-      heat.tr = 0.075
+      heat.tr = 0.085
       clearTimeout(idleTimer)
       idleTimer = setTimeout(() => {
         heat.tr = 0.04
@@ -83,15 +82,15 @@ export default function LavaLamp({ className }) {
         const s = state[i]
         const a = (time / b.period) * Math.PI * 2 + b.phase
         const baseX = wide ? b.x : 0.2 + b.x * 0.6
-        s.x = (baseX + Math.sin(a * 0.7 + b.phase) * 0.05) * w
-        s.y = (0.5 + Math.sin(a) * 0.55) * h
-        s.sy = 1 + Math.abs(Math.cos(a)) * 0.35
-        s.r = b.r * scale * (wide ? 1 : 1.25) * (1 + Math.sin(a * 1.7) * 0.08)
+        s.x = (baseX + Math.sin(a * 0.75 + b.phase) * 0.065) * w
+        s.y = (0.5 + Math.sin(a) * 0.54) * h
+        s.sy = 1 + Math.abs(Math.cos(a)) * 0.38
+        s.r = b.r * scale * (wide ? 1 : 1.25) * (1 + Math.sin(a * 1.6) * 0.09)
         s.c = PALETTE[b.color]
       })
-      heat.x += (heat.tx - heat.x) * 0.06
-      heat.y += (heat.ty - heat.y) * 0.06
-      heat.r += (heat.tr - heat.r) * 0.04
+      heat.x += (heat.tx - heat.x) * 0.08
+      heat.y += (heat.ty - heat.y) * 0.08
+      heat.r += (heat.tr - heat.r) * 0.05
     }
 
     const draw = () => {
@@ -131,8 +130,8 @@ export default function LavaLamp({ className }) {
             cb += heatColor[2] * f
           }
 
-          let alpha = smoothstep(0.9, 1.12, field) * (0.32 + (1 - Math.exp(-Math.max(0, field - 1) * 0.35)) * 0.18)
-          if (wide) alpha *= 0.42 + 0.58 * smoothstep(0.15, 0.6, x / w)
+          let alpha = smoothstep(0.9, 1.12, field) * (0.36 + (1 - Math.exp(-Math.max(0, field - 1) * 0.35)) * 0.2)
+          if (wide) alpha *= 0.45 + 0.55 * smoothstep(0.15, 0.6, x / w)
 
           data[p] = cr / field
           data[p + 1] = cg / field
@@ -204,7 +203,7 @@ export default function LavaLamp({ className }) {
     io.observe(canvas)
     document.addEventListener('visibilitychange', onVisibility)
     reducedMql.addEventListener('change', onMotionChange)
-    if (finePointer && !lowEndDevice) {
+    if (finePointer) {
       window.addEventListener('pointermove', onPointerMove, { passive: true })
     }
     start()

@@ -3,7 +3,6 @@ import { IMAGES } from './images'
 export const SERVICE_TABS = [
   { key: 'cilios', label: 'Cílios', hint: 'Lash' },
   { key: 'sobrancelhas', label: 'Sobrancelhas', hint: 'Brow' },
-  { key: 'combos', label: 'Combos', hint: 'Combo' },
 ]
 
 export const SERVICES = {
@@ -35,6 +34,7 @@ export const SERVICES = {
       duration: '1h',
       style: 'Natural · Sem fios',
       image: IMAGES.lashLifting,
+      imageClass: 'object-top scale-[1.55] origin-[40%_4%]',
     },
   ],
   sobrancelhas: [
@@ -58,22 +58,6 @@ export const SERVICES = {
       duration: '1h',
       style: 'Estruturado · Alinhado',
       image: IMAGES.laminacao,
-    },
-  ],
-  combos: [
-    {
-      title: 'Combo Olhar Completo',
-      desc: 'Volume Brasileiro + Design de Sobrancelhas na mesma sessão.',
-      duration: '3h30',
-      style: 'Completo · Sessão única',
-      image: IMAGES.comboOlhar,
-    },
-    {
-      title: 'Combo Premium Lash & Brow',
-      desc: 'Volume Russo + Laminação de Sobrancelhas para definição máxima.',
-      duration: '4h',
-      style: 'Premium · Alta definição',
-      image: IMAGES.comboPremium,
     },
   ],
 }
